@@ -45,13 +45,13 @@ public class ApplicationDbContext : IdentityDbContext
         modelBuilder.Entity<Product>()
             .HasMany<AttributeSet>(product => product.AttributeSets)     // Each Product has many AttributeSets
             .WithOne(attributeSet => attributeSet.Product)               // Each AttributeSet can have one Product
-            .HasForeignKey(p => p.ProductId);                                   // The foreign key in Price is ProductId
+            .HasForeignKey(p => p.ProductId);                                  // The foreign key in Price is ProductId
         
-        //Price to Currency
-        modelBuilder.Entity<Price>()
-            .HasOne(p => p.Currency)           // Price has one Currency
-            .WithOne(c => c.Price)          // Currency has one Price
-            .HasForeignKey<Currency>(c => c.PriceId);       // The foreign key in Currency is PriceId
+        //Currency to List<Price>
+        modelBuilder.Entity<Currency>()
+            .HasMany<Price>(p => p.Prices)     // Price has one Currency
+            .WithOne(c => c.Currency)             // Currency has one Price
+            .HasForeignKey(c => c.CurrencyId);                    // The foreign key in Currency is PriceId
         
         //AttributeSet to List<Attribute>
         modelBuilder.Entity<AttributeSet>()

@@ -13,8 +13,5 @@ public class Currency
 
     public string Symbol { get; set; }
 
-    [ForeignKey("Price")]
-    public int PriceId { get; set; }
-
-    public Price Price { get; set; }
+    public ICollection<Price> Prices { get; set; } = new List<Price>();
 }

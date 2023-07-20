@@ -286,17 +286,11 @@ namespace SwProjAdmin.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("PriceId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Symbol")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PriceId")
-                        .IsUnique();
 
                     b.ToTable("Currencies");
                 });
@@ -339,6 +333,8 @@ namespace SwProjAdmin.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CurrencyId");
 
                     b.HasIndex("ProductId");
 
@@ -449,17 +445,6 @@ namespace SwProjAdmin.Data.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("SwProjAdmin.Models.Currency", b =>
-                {
-                    b.HasOne("SwProjAdmin.Models.Price", "Price")
-                        .WithOne("Currency")
-                        .HasForeignKey("SwProjAdmin.Models.Currency", "PriceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Price");
-                });
-
             modelBuilder.Entity("SwProjAdmin.Models.GalleryItem", b =>
                 {
                     b.HasOne("SwProjAdmin.Models.Product", "Product")
@@ -473,11 +458,19 @@ namespace SwProjAdmin.Data.Migrations
 
             modelBuilder.Entity("SwProjAdmin.Models.Price", b =>
                 {
+                    b.HasOne("SwProjAdmin.Models.Currency", "Currency")
+                        .WithMany("Prices")
+                        .HasForeignKey("CurrencyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SwProjAdmin.Models.Product", "Product")
                         .WithMany("Prices")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Currency");
 
                     b.Navigation("Product");
                 });
@@ -503,10 +496,9 @@ namespace SwProjAdmin.Data.Migrations
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("SwProjAdmin.Models.Price", b =>
+            modelBuilder.Entity("SwProjAdmin.Models.Currency", b =>
                 {
-                    b.Navigation("Currency")
-                        .IsRequired();
+                    b.Navigation("Prices");
                 });
 
             modelBuilder.Entity("SwProjAdmin.Models.Product", b =>
